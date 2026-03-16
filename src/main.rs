@@ -22,12 +22,14 @@ const g: f64 = -9.81;
 // for egui I used https://hackmd.io/@Hamze/Sys9nvF6Jl to learn
 fn step(body: &mut Body, dt: f64) {
     // the first kinematics equation applied here!
-    if body.position.y > -200.0 {
-        body.velocity += g * dt;
-        body.position.y += body.velocity * dt;
-    } else {
-        
-        body.velocity = 0.0;
+    // I decided to first compute these equations because then we have to do the calculation to stop the floor noclip glitch.
+    body.velocity += g * dt;
+    body.position.y += body.velocity * dt;
+    
+    // basically I derived -188 by doing -200(the floor's position - the ball's radius)
+    if body.position.y < -188.0 {
+        body.velocity=0.0;
+        body.position.y=-188.0;
     }
 }
 
