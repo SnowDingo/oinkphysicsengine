@@ -1,4 +1,4 @@
-use eframe::egui;
+use eframe::egui::{self, Pos2, Rect};
 
 // data templates
 
@@ -22,10 +22,11 @@ const g: f64 = -9.81;
 // for egui I used https://hackmd.io/@Hamze/Sys9nvF6Jl to learn
 fn step(body: &mut Body, dt: f64) {
     // the first kinematics equation applied here!
-    if body.position.y >= -200.0 {
+    if body.position.y > -200.0 {
         body.velocity += g * dt;
         body.position.y += body.velocity * dt;
     } else {
+        
         body.velocity = 0.0;
     }
 }
@@ -40,7 +41,7 @@ fn main() -> eframe::Result<()> {
             Ok(Box::new(App {
                 body: Body {
                     position: Position { x: 200.0, y: 200.0 },
-                    velocity: -5.0,
+                    velocity: -10.0,
                 },
                 dt: 0.016,
             }))
@@ -63,7 +64,14 @@ impl eframe::App for App {
             );
             let painter = ui.painter();
             painter.circle_filled(cordinate, 12.0, egui::Color32::WHITE);
+            // the floor:
+            let floory=500.0;
+            painter.line_segment([
+                Pos2::new(0.0,floory as f32),
+                Pos2::new(ui.available_width()+20.0,floory as f32)
+            ], egui::Stroke::new(4.0, egui::Color32::WHITE))
         });
+        
         ctx.request_repaint();
     }
 }
