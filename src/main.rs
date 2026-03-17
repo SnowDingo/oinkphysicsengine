@@ -65,6 +65,10 @@ impl eframe::App for App {
             ui.heading("Oink physics simulation");
             ui.label(format!("Position: {:.2}", self.body.position.y));
 
+            if ui.button("Restart").clicked() {
+                println!("Restarted");
+            }
+
             let cordinate = egui::Pos2::new(
                 self.body.position.x as f32,
                 300.0 - self.body.position.y as f32,
