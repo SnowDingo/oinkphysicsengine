@@ -6,9 +6,13 @@ struct Position {
     x: f64,
     y: f64,
 }
+struct Velocity{
+    x:f64,
+    y:f64,
+}
 struct Body {
     position: Position,
-    velocity: f64,
+    velocity: Velocity,
 }
 struct App {
     body: Body,
@@ -29,13 +33,13 @@ fn step(body: &mut Body, dt: f64) {
     // This is called euiler's integration formula. 
     //  Basically by using dt we approximate the next state. 
     // I decided to first compute these equations because then we have to do the calculation to stop the floor noclip glitch.
-    body.velocity += g * dt;
-    body.position.y += body.velocity * dt;
+    body.velocity.y += g * dt;
+    body.position.y += body.velocity.y * dt;
     
     // basically I derived -188 by doing -200(the floor's position - the ball's radius)
     // the second part of the ineqality is like clamping or setting the max number of calculations so the ball doesn't do the infinite bounces.
-    if body.position.y < -188.0 &&  body.velocity.abs() >=0.01 {
-        body.velocity= -e*body.velocity;
+    if body.position.y < -188.0 &&  body.velocity.y.abs() >=0.01 {
+        body.velocity.y= -e*body.velocity.y;
         body.position.y=-188.0;
     }
 }
@@ -50,7 +54,7 @@ fn main() -> eframe::Result<()> {
             Ok(Box::new(App {
                 body: Body {
                     position: Position { x: 200.0, y: 200.0 },
-                    velocity: -10.0,
+                    velocity: Velocity{x:0.0,y:-10.0},
                 },
                 dt: 0.016,
             }))
@@ -69,7 +73,7 @@ impl eframe::App for App {
             ui.label(format!("Position: {:.2}", self.body.position.y));
 
             if ui.button("Restart").clicked() {
-                self.body.velocity=-10.0;
+                self.body.velocity.y=-10.0;
                 self.body.position.y=200.0;
                 self.body.position.x=200.0;
             }
