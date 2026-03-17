@@ -16,19 +16,24 @@ struct App {
 }
 
 const g: f64 = -9.81;
+// the bounciness 
+const e: f64 = 0.6;
 
 // process to execute each frame grouped together
 
 // for egui I used https://hackmd.io/@Hamze/Sys9nvF6Jl to learn
 fn step(body: &mut Body, dt: f64) {
     // the first kinematics equation applied here!
+    // This is called euiler's integration formula. 
+    //  Basically by using dt we approximate the next state. 
     // I decided to first compute these equations because then we have to do the calculation to stop the floor noclip glitch.
     body.velocity += g * dt;
     body.position.y += body.velocity * dt;
     
     // basically I derived -188 by doing -200(the floor's position - the ball's radius)
-    if body.position.y < -188.0 {
-        body.velocity=0.0;
+    // the second part of the ineqality is like clamping or setting the max number of calculations so the ball doesn't do the infinite bounces.
+    if body.position.y < -188.0 &&  body.velocity.abs() >=0.01 {
+        body.velocity= -e*body.velocity;
         body.position.y=-188.0;
     }
 }
