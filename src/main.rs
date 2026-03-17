@@ -19,6 +19,8 @@ const g: f64 = -9.81;
 // the bounciness 
 const e: f64 = 0.6;
 
+
+
 // process to execute each frame grouped together
 
 // for egui I used https://hackmd.io/@Hamze/Sys9nvF6Jl to learn
@@ -58,6 +60,7 @@ fn main() -> eframe::Result<()> {
 }
 
 impl eframe::App for App {
+
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         step(&mut self.body, self.dt);
 
@@ -66,7 +69,9 @@ impl eframe::App for App {
             ui.label(format!("Position: {:.2}", self.body.position.y));
 
             if ui.button("Restart").clicked() {
-                println!("Restarted");
+                self.body.velocity=-10.0;
+                self.body.position.y=200.0;
+                self.body.position.x=200.0;
             }
 
             let cordinate = egui::Pos2::new(
