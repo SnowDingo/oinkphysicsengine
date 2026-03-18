@@ -36,6 +36,7 @@ fn step(body: &mut Body, dt: f64) {
     body.velocity.y += g * dt;
     body.position.y += body.velocity.y * dt;
     
+    body.position.x += body.velocity.x *dt;
     // basically I derived -188 by doing -200(the floor's position - the ball's radius)
     // the second part of the ineqality is like clamping or setting the max number of calculations so the ball doesn't do the infinite bounces.
     if body.position.y < -188.0 &&  body.velocity.y.abs() >=0.01 {
@@ -54,7 +55,7 @@ fn main() -> eframe::Result<()> {
             Ok(Box::new(App {
                 body: Body {
                     position: Position { x: 200.0, y: 200.0 },
-                    velocity: Velocity{x:0.0,y:-10.0},
+                    velocity: Velocity{x:20.0,y:-10.0},
                 },
                 dt: 0.016,
             }))
