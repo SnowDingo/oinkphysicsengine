@@ -23,7 +23,7 @@ const g: f64 = -9.81;
 // the bounciness 
 const e: f64 = 0.6;
 
-
+const k:f64 = 0.2;
 
 // process to execute each frame grouped together
 
@@ -34,6 +34,9 @@ fn step(body: &mut Body, dt: f64) {
     //  Basically by using dt we approximate the next state. 
     // I decided to first compute these equations because then we have to do the calculation to stop the floor noclip glitch.
     body.velocity.y += g * dt;
+    if body.velocity.x.abs()>=0.0{
+    body.velocity.x += -k * body.velocity.x * dt;
+    }
     body.position.y += body.velocity.y * dt;
     
     body.position.x += body.velocity.x *dt;
