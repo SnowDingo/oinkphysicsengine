@@ -17,9 +17,8 @@ struct Body {
 struct App {
     body: Body,
     dt: f64,
+    g:f64,
 }
-
-const g: f64 = -9.81;
 // the bounciness 
 const e: f64 = 0.6;
 
@@ -28,7 +27,7 @@ const k:f64 = 0.2;
 // process to execute each frame grouped together
 
 // for egui I used https://hackmd.io/@Hamze/Sys9nvF6Jl to learn
-fn step(body: &mut Body, dt: f64) {
+fn step(body: &mut Body, dt: f64, g:f64) {
     // the first kinematics equation applied here!
     // This is called euiler's integration formula. 
     //  Basically by using dt we approximate the next state. 
@@ -58,9 +57,10 @@ fn main() -> eframe::Result<()> {
             Ok(Box::new(App {
                 body: Body {
                     position: Position { x: 200.0, y: 200.0 },
-                    velocity: Velocity{x:20.0,y:-10.0},
+                    velocity: Velocity{x:90.0,y:-10.0},
                 },
                 dt: 0.016,
+                g:-9.81,
             }))
         }),
     )?;
@@ -70,12 +70,12 @@ fn main() -> eframe::Result<()> {
 impl eframe::App for App {
 
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        step(&mut self.body, self.dt);
+        step(&mut self.body, self.dt,self.g);
 
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.heading("Oink physics simulation");
             ui.label(format!("Position: {:.2}", self.body.position.y));
-
+            ui.add(egui::Slider::new(&mut self.g, -19.6..=0.0).text("Gravity"));
             if ui.button("Restart").clicked() {
                 self.body.velocity.y=-10.0;
                 self.body.position.y=200.0;
